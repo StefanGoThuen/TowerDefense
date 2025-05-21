@@ -52,6 +52,10 @@ public class GameView extends JPanel {
     private JButton pauseButton;
     private Class<? extends Tower> placingTowerType;
 
+    private final Image basicEnemyImage = loadImage("basic_enemy.png");
+    private final Image circleEnemyImage = loadImage("circle_enemy.png");
+    private final Image triangleEnemyImage = loadImage("triangle_enemy.png");
+
     public GameView(ViewableGameModel viewableTetrisModel) {
         this.viewableTetrisModel = viewableTetrisModel;
         this.colorTheme = new ColorTheme();
@@ -270,53 +274,38 @@ public class GameView extends JPanel {
 
         g2.setColor(Color.WHITE);
         g2.setFont(new Font("Monospaced", Font.BOLD, 50));
-        Inf101Graphics.drawCenteredString(g2, "GAME OVER", getBounds());
+        SwingGraphics.drawCenteredString(g2, "GAME OVER", getBounds());
     }
 
     private void drawEnemies(Graphics2D g2, List<IEnemy> enemies, CellPositionToPixelConverter converter) {
         for (IEnemy enemy : enemies) {
             Rectangle2D rect = converter.getBoundsForCell(enemy.getPosition());
 
+            Image img;
             if (enemy instanceof TriangleEnemy) {
-                g2.setColor(Color.ORANGE);
+                img = triangleEnemyImage;
             } else if (enemy instanceof CircleEnemy) {
-                g2.setColor(Color.MAGENTA);
+                img = circleEnemyImage;
             } else if (enemy instanceof BasicEnemy) {
-                g2.setColor(Color.RED);
+                img = basicEnemyImage;
             } else {
-                g2.setColor(Color.RED);
+                img = basicEnemyImage;
             }
 
-            if (enemy instanceof CircleEnemy) {
-                int centerX = (int) (rect.getX() + rect.getWidth() / 2);
-                int centerY = (int) (rect.getY() + rect.getHeight() / 2);
-                int radius = (int) (rect.getWidth() / 2);
-                g2.fillOval(centerX - radius, centerY - radius, radius * 2, radius * 2);
-            } else if (enemy instanceof TriangleEnemy) {
-                int x1 = (int) rect.getX() + (int) rect.getWidth() / 2;
-                int y1 = (int) rect.getY();
+            g2.drawImage(img,
+                    (int) rect.getX(),
+                    (int) rect.getY(),
+                    (int) rect.getWidth(),
+                    (int) rect.getHeight(),
+                    null);
 
-                int x2 = (int) rect.getX();
-                int y2 = (int) (rect.getY() + rect.getHeight());
-
-                int x3 = (int) (rect.getX() + rect.getWidth());
-                int y3 = (int) (rect.getY() + rect.getHeight());
-
-                int[] xPoints = { x1, x2, x3 };
-                int[] yPoints = { y1, y2, y3 };
-                g2.fillPolygon(xPoints, yPoints, 3);
-            } else if (enemy instanceof BasicEnemy) {
-                g2.fill(rect);
-            }
-
-            // Health bar
+            // Draw health bar
             double barHeight = 4;
             double padding = 1;
             double maxHealth = enemy.getMaxHealth();
             double healthRatio = (double) enemy.getHealth() / maxHealth;
 
-            double maxBarWidth = rect.getWidth();
-            double barWidth = Math.min(maxBarWidth, rect.getWidth() * healthRatio);
+            double barWidth = Math.min(rect.getWidth(), rect.getWidth() * healthRatio);
 
             g2.setColor(Color.GREEN);
             g2.fill(new Rectangle2D.Double(
@@ -599,7 +588,13 @@ public class GameView extends JPanel {
         return new Rectangle(x, y, buttonWidth, buttonHeight);
     }
 
-    private Image loadImage(String fileName) {
-        return new ImageIcon(getClass().getResource("/no/game/midi/" + fileName)).getImage();
+    private Image loadImage(String filename) {
+        try {
+            return new ImageIcon(getClass().getResource("/no/game/resources/" + filename)).getImage();
+        } catch (Exception e) {
+            System.err.println("Image not found: " + filename);
+            return null;
+        }
     }
+
 }
