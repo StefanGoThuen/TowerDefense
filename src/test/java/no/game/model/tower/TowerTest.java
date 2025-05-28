@@ -10,8 +10,6 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
-
 public class TowerTest {
 
     @Test
@@ -69,6 +67,20 @@ public class TowerTest {
         boolean secondSuccess = model.placeTower(firstTowerPosition, towerType);
 
         assertFalse(secondSuccess);
+    }
+
+    @Test
+    public void testGetTowerClassReturnsCorrectClasses() {
+        assertEquals(BasicTower.class, TowerType.BASIC.getTowerClass());
+        assertEquals(SniperTower.class, TowerType.SNIPER.getTowerClass());
+        assertEquals(SlowTower.class, TowerType.SLOW.getTowerClass());
+    }
+
+    @Test
+    public void testGetTowerClassNotNull() {
+        for (TowerType type : TowerType.values()) {
+            assertNotNull(type.getTowerClass(), "getTowerClass should not return null for " + type);
+        }
     }
 
 }
