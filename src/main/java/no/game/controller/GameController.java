@@ -133,6 +133,12 @@ public class GameController {
             view.setPlacingTower(true);
             return;
         }
+        if (view.getAOETowerBox().contains(point)) {
+            selectedTowerType = TowerType.AOE;
+            view.setPlacingTowerType(getTowerClass(selectedTowerType));
+            view.setPlacingTower(true);
+            return;
+        }
 
         if (view.isPlacingTower()) {
             placeTowerAt(point);
@@ -150,6 +156,7 @@ public class GameController {
             case BASIC -> no.game.model.tower.Tower.class;
             case SNIPER -> no.game.model.tower.SniperTower.class;
             case SLOW -> no.game.model.tower.SlowTower.class;
+            case AOE -> no.game.model.tower.AoeTower.class;
         };
     }
 }

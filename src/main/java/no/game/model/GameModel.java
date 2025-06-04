@@ -4,6 +4,7 @@ import no.grid.GridCell;
 import no.grid.GridDimension;
 import no.game.model.enemy.EnemyManager;
 import no.game.model.enemy.IEnemy;
+import no.game.model.tower.AoeTower;
 import no.game.model.tower.BasicTower;
 import no.game.model.tower.SlowTower;
 import no.game.model.tower.SniperTower;
@@ -212,6 +213,7 @@ public class GameModel implements ViewableGameModel {
             case BASIC -> 50;
             case SNIPER -> 75;
             case SLOW -> 60;
+            case AOE -> 80;
         };
 
         if (gold >= towerCost && board.get(pos) != 'w' && !isOccupied(pos)) {
@@ -219,6 +221,8 @@ public class GameModel implements ViewableGameModel {
                 case BASIC -> new BasicTower(pos);
                 case SNIPER -> new SniperTower(pos);
                 case SLOW -> new SlowTower(pos);
+                case AOE -> new AoeTower(pos);
+                default -> throw new IllegalArgumentException("Unexpected value: " + type);
             };
 
             towers.add(tower);

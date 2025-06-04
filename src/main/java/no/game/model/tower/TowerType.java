@@ -27,7 +27,9 @@ public enum TowerType {
     /**
      * Represents a slow tower that slows down enemies.
      */
-    SLOW;
+    SLOW,
+
+    AOE;
 
     /**
      * Returns the corresponding Class object for the tower type.
@@ -44,6 +46,7 @@ public enum TowerType {
             case BASIC -> BasicTower.class;
             case SNIPER -> SniperTower.class;
             case SLOW -> SlowTower.class;
+            case AOE -> AoeTower.class;
         };
     }
 }

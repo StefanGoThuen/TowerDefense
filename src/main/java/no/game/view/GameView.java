@@ -24,6 +24,7 @@ import no.game.model.enemy.CircleEnemy;
 import no.game.model.enemy.BasicEnemy;
 import no.game.model.enemy.IEnemy;
 import no.game.model.enemy.TriangleEnemy;
+import no.game.model.tower.BasicTower;
 import no.game.model.tower.SlowTower;
 import no.game.model.tower.SniperTower;
 import no.game.model.tower.Tower;
@@ -48,6 +49,7 @@ public class GameView extends JPanel {
     private Rectangle2D baseTowerBox;
     private Rectangle2D sniperBox;
     private Rectangle2D slowBox;
+    private Rectangle2D aoeBox;
     private JButton startWaveButton;
     private JButton pauseButton;
     private Class<? extends Tower> placingTowerType;
@@ -322,6 +324,8 @@ public class GameView extends JPanel {
             Color color = switch (tower.getClass().getSimpleName()) {
                 case "SniperTower" -> Color.GREEN;
                 case "SlowTower" -> Color.CYAN;
+                case "BasicTower" -> Color.BLUE;
+                case "AoeTower" -> Color.ORANGE;
                 default -> Color.BLUE;
             };
             drawTowerShape(g2, rect, tower.getClass(), color);
@@ -342,6 +346,7 @@ public class GameView extends JPanel {
             Color color = switch (placingTowerType.getSimpleName()) {
                 case "SniperTower" -> Color.GREEN;
                 case "SlowTower" -> Color.CYAN;
+                case "AoeTower" -> Color.ORANGE;
                 default -> Color.BLUE;
             };
             drawTowerShape(g2, rect, placingTowerType, color);
@@ -395,6 +400,12 @@ public class GameView extends JPanel {
                 40,
                 40);
 
+        aoeBox = new Rectangle2D.Double(
+                slowBox.getMaxX() + padding,
+                shopBounds.getY() + padding,
+                40,
+                40);
+
         // Basic Tower
         drawTowerShape(g2, baseTowerBox, TowerType.BASIC.getTowerClass(), Color.BLUE);
         g2.setColor(Color.WHITE);
@@ -410,8 +421,13 @@ public class GameView extends JPanel {
         g2.setColor(Color.WHITE);
         g2.draw(slowBox);
 
+        // AOE Tower
+        drawTowerShape(g2, aoeBox, TowerType.AOE.getTowerClass(), Color.ORANGE);
+        g2.setColor(Color.WHITE);
+        g2.draw(aoeBox);
+
         g2.setFont(new Font("Monospaced", Font.BOLD, 14));
-        g2.drawString("Klikk for å kjøpe tårn", (int) (slowBox.getMaxX() + 10), (int) (slowBox.getY() + 25));
+        g2.drawString("Klikk for å kjøpe tårn", (int) (aoeBox.getMaxX() + 10), (int) (aoeBox.getY() + 25));
 
         addMouseMotionListener(new MouseMotionAdapter() {
             @Override
@@ -424,6 +440,8 @@ public class GameView extends JPanel {
                     hoveredTowerType = TowerType.SNIPER;
                 } else if (slowBox.contains(point)) {
                     hoveredTowerType = TowerType.SLOW;
+                } else if (aoeBox.contains(point)) {
+                    hoveredTowerType = TowerType.AOE;
                 } else {
                     hoveredTowerType = null;
                 }
@@ -466,6 +484,8 @@ public class GameView extends JPanel {
                 return "Sniper Tower:\nDamage: 100\nRange: 20\nCost: 75";
             case SLOW:
                 return "Slow Tower:\nSlow: 20% speed\nRange: 5\nCost: 60";
+            case AOE:
+                return "Aoe Tower:\nDamage: 4\nRange 2\nCost: 80";
             default:
                 return "Unknown Tower";
         }
@@ -494,6 +514,8 @@ public class GameView extends JPanel {
             g2.fillPolygon(new int[] { x1, x2, x3 }, new int[] { y1, y2, y3 }, 3);
         } else if (towerClass == SlowTower.class) {
             g2.fillOval((int) rect.getX(), (int) rect.getY(), (int) rect.getWidth(), (int) rect.getHeight());
+        } else if (towerClass == BasicTower.class) {
+            g2.fill(rect);
         } else {
             g2.fill(rect);
         }
@@ -558,6 +580,10 @@ public class GameView extends JPanel {
      */
     public Rectangle2D getSlowTowerBox() {
         return slowBox;
+    }
+
+    public Rectangle2D getAOETowerBox() {
+        return aoeBox;
     }
 
     /**
