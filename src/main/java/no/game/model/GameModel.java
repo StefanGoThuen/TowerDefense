@@ -97,14 +97,25 @@ public class GameModel implements ViewableGameModel {
                 continue;
 
             IEnemy target = findEnemyInRange(tower);
-            if (target != null) {
-                if (tower instanceof SlowTower slowTower) {
+            if (tower instanceof AoeTower aoeTower) {
+                List<IEnemy> enemiesInRange = findEnemiesInRange(tower);
+                for (IEnemy aoeTarget : enemiesInRange) {
+                    projectiles.add(new Projectile(tower.getPosition(), aoeTarget, tower.getDamage()));
+                }
+                if (!enemiesInRange.isEmpty()) {
+                    tower.resetCooldown();
+                }
+            } else if (tower instanceof SlowTower slowTower) {
+                if (target != null) {
                     projectiles.add(new Projectile(tower.getPosition(), target, tower.getDamage()));
                     target.applySlow(slowTower.getSlowAmount(), slowTower.getSlowDuration());
-                } else {
-                    projectiles.add(new Projectile(tower.getPosition(), target, tower.getDamage()));
+                    tower.resetCooldown();
                 }
-                tower.resetCooldown();
+            } else {
+                if (target != null) {
+                    projectiles.add(new Projectile(tower.getPosition(), target, tower.getDamage()));
+                    tower.resetCooldown();
+                }
             }
 
         }
@@ -350,6 +361,26 @@ public class GameModel implements ViewableGameModel {
 
     public void setGold(int gold) {
         this.gold = gold;
+    }
+
+    /**
+     * Finds all enemies within the range of the given tower.
+     *
+     * @param tower The tower whose range is to be checked.
+     * @return A list of enemies within the range.
+     */
+    private List<IEnemy> findEnemiesInRange(Tower tower) {
+        List<IEnemy> enemiesInRange = new ArrayList<>();
+        CellPosition towerPos = tower.getPosition();
+        int range = tower.getRange();
+
+        for (IEnemy enemy : enemyManager.getEnemies()) {
+            if (distance(towerPos, enemy.getPosition()) <= range) {
+                enemiesInRange.add(enemy);
+            }
+        }
+
+        return enemiesInRange;
     }
 
 }
