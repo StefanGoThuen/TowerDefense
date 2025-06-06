@@ -100,7 +100,7 @@ public class GameModel implements ViewableGameModel {
             if (tower instanceof AoeTower aoeTower) {
                 List<IEnemy> enemiesInRange = findEnemiesInRange(tower);
                 for (IEnemy aoeTarget : enemiesInRange) {
-                    projectiles.add(new Projectile(tower.getPosition(), aoeTarget, tower.getDamage()));
+                    projectiles.add(new Projectile(aoeTower.getPosition(), aoeTarget, aoeTower.getDamage()));
                 }
                 if (!enemiesInRange.isEmpty()) {
                     tower.resetCooldown();
@@ -369,7 +369,7 @@ public class GameModel implements ViewableGameModel {
      * @param tower The tower whose range is to be checked.
      * @return A list of enemies within the range.
      */
-    private List<IEnemy> findEnemiesInRange(Tower tower) {
+    public List<IEnemy> findEnemiesInRange(Tower tower) {
         List<IEnemy> enemiesInRange = new ArrayList<>();
         CellPosition towerPos = tower.getPosition();
         int range = tower.getRange();
