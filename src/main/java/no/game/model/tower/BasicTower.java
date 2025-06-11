@@ -14,5 +14,6 @@ public class BasicTower extends Tower {
      */
     public BasicTower(CellPosition position) {
         super(position, 4, 3, 3);
+        this.cost = 50;
     }
 }

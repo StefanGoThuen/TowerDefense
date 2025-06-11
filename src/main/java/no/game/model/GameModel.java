@@ -383,4 +383,25 @@ public class GameModel implements ViewableGameModel {
         return enemiesInRange;
     }
 
+    /**
+     * Sells the tower at the given cell position if one exists.
+     *
+     * @param cell the cell where the tower is located
+     * @return true if a tower was sold, false if no tower was present
+     */
+    public boolean sellTower(CellPosition cell) {
+        Iterator<Tower> iterator = towers.iterator();
+        while (iterator.hasNext()) {
+            Tower tower = iterator.next();
+            if (tower.getPosition().equals(cell)) {
+                int refund = (int) (tower.getCost());
+                this.gold += refund;
+
+                iterator.remove();
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

@@ -45,6 +45,7 @@ public class GameView extends JPanel {
     private TowerType hoveredTowerType = null;
     private boolean isPlacingTower = false;
     private Rectangle2D shopBounds;
+    private CellPosition towerMenuPosition = null;
 
     private Rectangle2D baseTowerBox;
     private Rectangle2D sniperBox;
@@ -135,6 +136,14 @@ public class GameView extends JPanel {
 
         if (hoveredTowerType != null) {
             drawTowerInfo(g2, hoveredTowerType);
+        }
+        if (towerMenuPosition != null) {
+            Rectangle2D sellButton = getSellButtonBoxFor(towerMenuPosition);
+            g.setColor(Color.RED);
+            g.fillRect((int) sellButton.getX(), (int) sellButton.getY(),
+                    (int) sellButton.getWidth(), (int) sellButton.getHeight());
+            g.setColor(Color.WHITE);
+            g.drawString("Sell", (int) sellButton.getX() + 10, (int) sellButton.getY() + 17);
         }
 
     }
@@ -621,6 +630,40 @@ public class GameView extends JPanel {
             System.err.println("Image not found: " + filename);
             return null;
         }
+    }
+
+    public void showTowerMenu(CellPosition cell) {
+        towerMenuPosition = cell;
+        repaint();
+    }
+
+    public void hideTowerMenu() {
+        towerMenuPosition = null;
+        repaint();
+    }
+
+    public boolean isTowerMenuVisible() {
+        return towerMenuPosition != null;
+    }
+
+    public CellPosition getTowerMenuPosition() {
+        return towerMenuPosition;
+    }
+
+    public Rectangle2D getSellButtonBoxFor(CellPosition cell) {
+        Rectangle2D boardBox = new Rectangle2D.Double(
+                OUTERMARGIN, OUTERMARGIN,
+                getWidth() - OUTERMARGIN * 2,
+                getHeight() - OUTERMARGIN * 2);
+
+        CellPositionToPixelConverter converter = new CellPositionToPixelConverter(
+                boardBox, viewableTetrisModel.getDimension(), CELLMARGIN);
+
+        Point towerCenter = converter.getCellCenter(cell);
+
+        int width = 60;
+        int height = 25;
+        return new Rectangle2D.Double(towerCenter.x - width / 2, towerCenter.y - 50, width, height);
     }
 
 }

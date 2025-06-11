@@ -13,7 +13,8 @@ public class SlowTower extends Tower {
      * @param position The position of the tower.
      */
     public SlowTower(CellPosition position) {
-        super(position, 5, 0, 4); // range 5, no damage, cooldown 4 ticks
+        super(position, 5, 0, 4);
+        this.cost = 60;
     }
 
     /**

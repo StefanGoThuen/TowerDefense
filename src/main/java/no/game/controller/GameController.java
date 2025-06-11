@@ -54,6 +54,20 @@ public class GameController {
                 } else {
                     handleTowerSelection(point);
                 }
+                if (view.isTowerMenuVisible()) {
+                    Rectangle2D sellButton = view.getSellButtonBoxFor(view.getTowerMenuPosition());
+                    if (sellButton.contains(point)) {
+                        boolean sold = model.sellTower(view.getTowerMenuPosition());
+                        if (sold) {
+                            System.out.println("Tower sold!");
+                        }
+                        view.hideTowerMenu();
+                        return;
+                    } else {
+                        view.hideTowerMenu();
+                    }
+                }
+
             }
         });
 
@@ -142,6 +156,25 @@ public class GameController {
 
         if (view.isPlacingTower()) {
             placeTowerAt(point);
+        } else {
+            Rectangle2D box = new Rectangle2D.Double(
+                    GameView.OUTERMARGIN,
+                    GameView.OUTERMARGIN,
+                    view.getWidth() - GameView.OUTERMARGIN * 2,
+                    view.getHeight() - GameView.OUTERMARGIN * 2);
+
+            CellPositionToPixelConverter converter = new CellPositionToPixelConverter(
+                    box,
+                    model.getDimension(),
+                    GameView.CELLMARGIN);
+
+            CellPosition cell = converter.getCellFromPixel(point.x, point.y);
+
+            if (cell != null && !isCellInShopBounds(cell, converter)) {
+                if (model.sellTower(cell)) {
+                    view.repaint();
+                }
+            }
         }
     }
 

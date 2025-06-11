@@ -11,6 +11,7 @@ public class AoeTower extends Tower {
 
     public AoeTower(CellPosition position) {
         super(position, 2, 4, 2);
+        this.cost = 80;
     }
 
     public List<Projectile> shootAtEnemies(List<IEnemy> enemies) {

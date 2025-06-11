@@ -12,6 +12,7 @@ public abstract class Tower implements ITower {
     protected double damage;
     protected int cooldownTicks;
     protected int cooldownRemaining;
+    protected int cost;
 
     /**
      * Constructs a new {@code Tower}.
@@ -66,5 +67,9 @@ public abstract class Tower implements ITower {
     @Override
     public double getDamage() {
         return damage;
+    }
+
+    public int getCost() {
+        return cost;
     }
 }

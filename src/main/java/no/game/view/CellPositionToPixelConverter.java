@@ -4,6 +4,7 @@ import no.grid.CellPosition;
 import no.grid.GridDimension;
 
 import java.awt.geom.Rectangle2D;
+import java.awt.Point;
 
 public class CellPositionToPixelConverter {
 
@@ -37,4 +38,12 @@ public class CellPositionToPixelConverter {
         }
         return null;
     }
+
+    public Point getCellCenter(CellPosition cell) {
+        Rectangle2D bounds = getBoundsForCell(cell);
+        int centerX = (int) (bounds.getX() + bounds.getWidth() / 2);
+        int centerY = (int) (bounds.getY() + bounds.getHeight() / 2);
+        return new Point(centerX, centerY);
+    }
+
 }
