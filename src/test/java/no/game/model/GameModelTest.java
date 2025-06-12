@@ -2,6 +2,9 @@ package no.game.model;
 
 import no.grid.CellPosition;
 import no.game.model.enemy.IEnemy;
+import no.game.model.tower.TowerType;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -10,11 +13,15 @@ import java.util.List;
 
 public class GameModelTest {
 
+    private GameModel model;
+
+    @BeforeEach
+    public void setup() {
+        model = new GameModel();
+    }
+
     @Test
     public void testEnemyKilledIncreasesScoreAndGold() {
-        GameModel model = new GameModel();
-        model.setGameState();
-
         int initialGold = model.getGold();
         int initialScore = model.getScore();
 
@@ -26,7 +33,6 @@ public class GameModelTest {
 
     @Test
     public void testGameOverWhenHpZero() {
-        GameModel model = new GameModel();
         model.setGameState();
 
         List<CellPosition> path = Map.getPath();
@@ -86,8 +92,12 @@ public class GameModelTest {
     }
 
     @Test
+    public void testInitialGameStateIsChoose() {
+        assertEquals(GameState.CHOOSE, model.getGameState());
+    }
+
+    @Test
     public void testGameStateTransitions() {
-        GameModel model = new GameModel();
 
         assertEquals(GameState.CHOOSE, model.getGameState());
 
@@ -103,6 +113,35 @@ public class GameModelTest {
         model.setGameState();
         assertEquals(GameState.ACTIVE_GAME, model.getGameState());
 
+    }
+
+    @Test
+    public void testSellTowerSuccessfully() {
+        CellPosition pos = new CellPosition(5, 5);
+        int startingGold = model.getGold();
+
+        boolean placed = model.placeTower(pos, TowerType.BASIC);
+        assertTrue(placed);
+
+        assertEquals(startingGold - 50, model.getGold());
+
+        boolean sold = model.sellTower(pos);
+        assertTrue(sold);
+
+        assertEquals(startingGold, model.getGold());
+
+        assertNull(model.getTowerAt(pos));
+    }
+
+    @Test
+    public void testSellTowerFailsIfNoTower() {
+        CellPosition pos = new CellPosition(7, 7);
+        int goldBefore = model.getGold();
+
+        boolean sold = model.sellTower(pos);
+        assertFalse(sold);
+
+        assertEquals(goldBefore, model.getGold());
     }
 
 }
