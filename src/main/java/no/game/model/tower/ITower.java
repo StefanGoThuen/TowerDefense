@@ -39,4 +39,9 @@ public interface ITower {
      * @return The damage dealt per attack.
      */
     double getDamage();
+
+    int getCost();
+
+    int getCooldown();
+
 }

@@ -69,7 +69,14 @@ public abstract class Tower implements ITower {
         return damage;
     }
 
+    @Override
     public int getCost() {
         return cost;
     }
+
+    @Override
+    public int getCooldown() {
+        return cooldownTicks;
+    }
+
 }
