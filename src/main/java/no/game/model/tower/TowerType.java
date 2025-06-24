@@ -29,6 +29,9 @@ public enum TowerType {
      */
     SLOW,
 
+    /**
+     * Represents a aoe tower that shoots multiple enemies at once.
+     */
     AOE;
 
     /**

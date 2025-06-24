@@ -40,8 +40,18 @@ public interface ITower {
      */
     double getDamage();
 
+    /**
+     * Returns the Cost of a tower.
+     *
+     * @return The cost of the tower.
+     */
     int getCost();
 
+    /**
+     * Returns the cooldown of a tower that decides when it can shoot again.
+     *
+     * @return The cooldown in seconds for a tower attack.
+     */
     int getCooldown();
 
 }

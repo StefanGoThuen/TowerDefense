@@ -359,6 +359,7 @@ public class GameModel implements ViewableGameModel {
         return state = GameState.WELCOME;
     }
 
+    // Sets a new total gold amount based on the input.
     public void setGold(int gold) {
         this.gold = gold;
     }
