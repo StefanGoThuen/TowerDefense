@@ -138,12 +138,23 @@ public class GameView extends JPanel {
             drawTowerInfo(g2, hoveredTowerType);
         }
         if (towerMenuPosition != null) {
-            Rectangle2D sellButton = getSellButtonBoxFor(towerMenuPosition);
+            Rectangle2D[] buttons = getButtonBoxes(towerMenuPosition);
+
+            // --- Sell button ---
+            Rectangle2D sellButton = buttons[0];
             g.setColor(Color.RED);
             g.fillRect((int) sellButton.getX(), (int) sellButton.getY(),
                     (int) sellButton.getWidth(), (int) sellButton.getHeight());
             g.setColor(Color.WHITE);
             g.drawString("Sell", (int) sellButton.getX() + 10, (int) sellButton.getY() + 17);
+
+            // --- Upgrade button ---
+            Rectangle2D upgradeButton = buttons[1];
+            g.setColor(Color.BLUE);
+            g.fillRect((int) upgradeButton.getX(), (int) upgradeButton.getY(),
+                    (int) upgradeButton.getWidth() + 12, (int) upgradeButton.getHeight());
+            g.setColor(Color.WHITE);
+            g.drawString("Upgrade", (int) upgradeButton.getX() + 5, (int) upgradeButton.getY() + 17);
         }
     }
 
@@ -649,7 +660,7 @@ public class GameView extends JPanel {
         return towerMenuPosition;
     }
 
-    public Rectangle2D getSellButtonBoxFor(CellPosition cell) {
+    public Rectangle2D[] getButtonBoxes(CellPosition cell) {
         Rectangle2D boardBox = new Rectangle2D.Double(
                 OUTERMARGIN, OUTERMARGIN,
                 getWidth() - OUTERMARGIN * 2,
@@ -662,7 +673,15 @@ public class GameView extends JPanel {
 
         int width = 60;
         int height = 25;
-        return new Rectangle2D.Double(towerCenter.x - width / 2, towerCenter.y - 50, width, height);
+        int spacing = 5; // space between buttons
+        int y = towerCenter.y - 50;
+
+        Rectangle2D sellButton = new Rectangle2D.Double(
+                towerCenter.x - width - spacing / 2, y, width, height);
+        Rectangle2D upgradeButton = new Rectangle2D.Double(
+                towerCenter.x + spacing / 2, y, width, height);
+
+        return new Rectangle2D[] { sellButton, upgradeButton };
     }
 
 }

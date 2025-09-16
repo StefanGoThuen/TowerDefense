@@ -53,10 +53,22 @@ public class GameController {
                     }
                 }
 
+                if (handleTowerSelection(point)) {
+                    return;
+                }
+
                 if (view.isTowerMenuVisible()) {
-                    Rectangle2D sellButton = view.getSellButtonBoxFor(view.getTowerMenuPosition());
+                    Rectangle2D[] buttons = view.getButtonBoxes(view.getTowerMenuPosition());
+                    Rectangle2D sellButton = buttons[0];
+                    Rectangle2D upgradeButton = buttons[1];
+
                     if (sellButton.contains(point)) {
                         model.sellTower(view.getTowerMenuPosition());
+                        view.hideTowerMenu();
+                        return;
+                    } else if (upgradeButton.contains(point)) {
+                        // Implement upgradeTower method
+                        // model.upgradeTower(view.getTowerMenuPosition());
                         view.hideTowerMenu();
                         return;
                     } else {
@@ -64,11 +76,6 @@ public class GameController {
                     }
                 }
 
-                if (handleTowerSelection(point)) {
-                    return;
-                }
-
-                // --- Check for tower clicks (to open menu) ---
                 Rectangle2D boardBox = new Rectangle2D.Double(
                         GameView.OUTERMARGIN,
                         GameView.OUTERMARGIN,
@@ -177,7 +184,6 @@ public class GameController {
             return true;
         }
 
-        // No action handled
         return false;
     }
 
