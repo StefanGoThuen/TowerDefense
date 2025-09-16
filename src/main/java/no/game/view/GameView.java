@@ -145,7 +145,6 @@ public class GameView extends JPanel {
             g.setColor(Color.WHITE);
             g.drawString("Sell", (int) sellButton.getX() + 10, (int) sellButton.getY() + 17);
         }
-
     }
 
     private void drawGame(Graphics2D g2) {

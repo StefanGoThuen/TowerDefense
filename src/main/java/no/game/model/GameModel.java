@@ -405,4 +405,8 @@ public class GameModel implements ViewableGameModel {
         return false;
     }
 
+    public boolean hasTowerAt(CellPosition pos) {
+        return getTowers().stream().anyMatch(t -> t.getPosition().equals(pos));
+    }
+
 }

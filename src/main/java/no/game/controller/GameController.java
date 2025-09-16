@@ -51,16 +51,12 @@ public class GameController {
                             return;
                         }
                     }
-                } else {
-                    handleTowerSelection(point);
                 }
+
                 if (view.isTowerMenuVisible()) {
                     Rectangle2D sellButton = view.getSellButtonBoxFor(view.getTowerMenuPosition());
                     if (sellButton.contains(point)) {
-                        boolean sold = model.sellTower(view.getTowerMenuPosition());
-                        if (sold) {
-                            System.out.println("Tower sold!");
-                        }
+                        model.sellTower(view.getTowerMenuPosition());
                         view.hideTowerMenu();
                         return;
                     } else {
@@ -68,6 +64,27 @@ public class GameController {
                     }
                 }
 
+                if (handleTowerSelection(point)) {
+                    return;
+                }
+
+                // --- Check for tower clicks (to open menu) ---
+                Rectangle2D boardBox = new Rectangle2D.Double(
+                        GameView.OUTERMARGIN,
+                        GameView.OUTERMARGIN,
+                        view.getWidth() - GameView.OUTERMARGIN * 2,
+                        view.getHeight() - GameView.OUTERMARGIN * 2);
+
+                CellPositionToPixelConverter converter = new CellPositionToPixelConverter(
+                        boardBox,
+                        model.getDimension(),
+                        GameView.CELLMARGIN);
+
+                CellPosition clickedCell = converter.getCellFromPixel(point.x, point.y);
+
+                if (clickedCell != null && model.hasTowerAt(clickedCell)) {
+                    view.showTowerMenu(clickedCell);
+                }
             }
         });
 
@@ -127,55 +144,41 @@ public class GameController {
      * if a tower is currently selected for placement.
      *
      * @param point the screen coordinates where the player clicked
+     * @return true if handled, false otherwise
      */
-    private void handleTowerSelection(Point point) {
+    private boolean handleTowerSelection(Point point) {
         if (view.getBaseTowerBox().contains(point)) {
             selectedTowerType = TowerType.BASIC;
             view.setPlacingTowerType(getTowerClass(selectedTowerType));
             view.setPlacingTower(true);
-            return;
+            return true;
         }
         if (view.getSniperTowerBox().contains(point)) {
             selectedTowerType = TowerType.SNIPER;
             view.setPlacingTowerType(getTowerClass(selectedTowerType));
             view.setPlacingTower(true);
-            return;
+            return true;
         }
         if (view.getSlowTowerBox().contains(point)) {
             selectedTowerType = TowerType.SLOW;
             view.setPlacingTowerType(getTowerClass(selectedTowerType));
             view.setPlacingTower(true);
-            return;
+            return true;
         }
         if (view.getAOETowerBox().contains(point)) {
             selectedTowerType = TowerType.AOE;
             view.setPlacingTowerType(getTowerClass(selectedTowerType));
             view.setPlacingTower(true);
-            return;
+            return true;
         }
 
         if (view.isPlacingTower()) {
             placeTowerAt(point);
-        } else {
-            Rectangle2D box = new Rectangle2D.Double(
-                    GameView.OUTERMARGIN,
-                    GameView.OUTERMARGIN,
-                    view.getWidth() - GameView.OUTERMARGIN * 2,
-                    view.getHeight() - GameView.OUTERMARGIN * 2);
-
-            CellPositionToPixelConverter converter = new CellPositionToPixelConverter(
-                    box,
-                    model.getDimension(),
-                    GameView.CELLMARGIN);
-
-            CellPosition cell = converter.getCellFromPixel(point.x, point.y);
-
-            if (cell != null && !isCellInShopBounds(cell, converter)) {
-                if (model.sellTower(cell)) {
-                    view.repaint();
-                }
-            }
+            return true;
         }
+
+        // No action handled
+        return false;
     }
 
     /**

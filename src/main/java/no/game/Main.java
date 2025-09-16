@@ -11,7 +11,7 @@ import java.awt.Toolkit;
 
 public class Main {
 
-	public static final String WINDOW_TITLE = "INF101 Tower Defense";
+	public static final String WINDOW_TITLE = "Tower Defense";
 
 	public static void main(String[] args) {
 		GameModel model = new GameModel();
