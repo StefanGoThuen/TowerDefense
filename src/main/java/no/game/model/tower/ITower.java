@@ -54,4 +54,8 @@ public interface ITower {
      */
     int getCooldown();
 
+    int getUpgradeCost();
+
+    int getLevel();
+
 }

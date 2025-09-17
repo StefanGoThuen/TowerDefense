@@ -67,8 +67,7 @@ public class GameController {
                         view.hideTowerMenu();
                         return;
                     } else if (upgradeButton.contains(point)) {
-                        // Implement upgradeTower method
-                        // model.upgradeTower(view.getTowerMenuPosition());
+                        model.upgradeTower(view.getTowerMenuPosition());
                         view.hideTowerMenu();
                         return;
                     } else {

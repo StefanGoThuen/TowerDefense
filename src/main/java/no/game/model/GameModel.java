@@ -409,4 +409,17 @@ public class GameModel implements ViewableGameModel {
         return getTowers().stream().anyMatch(t -> t.getPosition().equals(pos));
     }
 
+    public boolean upgradeTower(CellPosition pos) {
+        for (Tower tower : towers) {
+            if (tower.getPosition().equals(pos)) {
+                int upgradeCost = (int) (tower.getUpgradeCost());
+                if (this.gold >= upgradeCost) {
+                    this.gold -= upgradeCost;
+                    return tower.upgrade();
+                }
+            }
+        }
+        return false;
+    }
+
 }

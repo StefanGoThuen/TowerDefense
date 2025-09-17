@@ -13,6 +13,8 @@ public abstract class Tower implements ITower {
     protected int cooldownTicks;
     protected int cooldownRemaining;
     protected int cost;
+    private int level = 1;
+    private int upgradeCost = 50;
 
     /**
      * Constructs a new {@code Tower}.
@@ -31,6 +33,17 @@ public abstract class Tower implements ITower {
         this.damage = damage;
         this.cooldownTicks = cooldownTicks;
         this.cooldownRemaining = 0;
+    }
+
+    public boolean upgrade() {
+        if (this.level < 5) {
+            this.level++;
+            this.damage += 5;
+            this.range += 1;
+            this.upgradeCost *= 2;
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -77,6 +90,16 @@ public abstract class Tower implements ITower {
     @Override
     public int getCooldown() {
         return cooldownTicks;
+    }
+
+    @Override
+    public int getUpgradeCost() {
+        return upgradeCost;
+    }
+
+    @Override
+    public int getLevel() {
+        return level;
     }
 
 }
